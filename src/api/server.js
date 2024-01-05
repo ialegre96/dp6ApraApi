@@ -12,7 +12,9 @@ const cookie = require('./cookieAuthenticate');
 const { isDevOrProd } = require('../shared/helper');
 const validServicesSync = require('../external-apis/apis-strategies/processSync/PathServicesSync');
 const ExternalApis = require('../external-apis/ExternalApisStrategy');
-const { firebaseSync } = require('../external-apis/apis-strategies/apis-strategies-codes');
+const {
+	firebaseSync,
+} = require('../external-apis/apis-strategies/apis-strategies-codes');
 const { getMessageError } = require('./shared/httpHelper');
 
 dbConfig.initConnection();
@@ -45,37 +47,45 @@ process.on('unhandledRejection', (err) => {
 	process.exit(1);
 });
 
-module.exports = Glue.compose(
-	manifest,
-	{
-		preRegister: async (server) => {
-			await server.register(AuthBearer);
-			server.auth.strategy('hash', 'bearer-access-token', {
-				validate: validateCompany,
+module.exports = Glue.compose(manifest, {
+	preRegister: async (server) => {
+		await server.register(AuthBearer);
+		server.auth.strategy('hash', 'bearer-access-token', {
+			validate: validateCompany,
+		});
+		server.auth.strategy('store', 'bearer-access-token', {
+			validate: validateStore,
+		});
+		if (isDevOrProd()) {
+			server.auth.strategy('simple', 'bearer-access-token', {
+				validate,
 			});
-			server.auth.strategy('store', 'bearer-access-token', {
-				validate: validateStore,
-			});
-			if (isDevOrProd()) {
-				server.auth.strategy('simple', 'bearer-access-token', {
-					validate,
+			server.auth.default('simple');
+			console.log('simple');
+			server.ext('onPreResponse', (request) => {
+				console.log('RESPONSE');
+				server.plugins['hapi-raven'].client.setContext({
+					user: request.auth.credentials,
 				});
-				server.auth.default('simple');
-				console.log('simple');
-				server.ext('onPreResponse', (request) => {
-					console.log('RESPONSE');
-					server.plugins['hapi-raven'].client.setContext({
-						user: request.auth.credentials,
-					});
-					if (request.response.isBoom && request.response.output.statusCode === 400) {
-						const newOutPut = request.response.output;
-						if (newOutPut.payload.message && newOutPut.payload.message.indexOf(' ' < 0)) {
-							newOutPut.payload.messageError = getMessageError(newOutPut.payload.message);
-						}
-						if (request.response.data && request.response.data.details) {
-							newOutPut.payload.details = request.response.data.details;
-						}
-						server.plugins['hapi-raven'].client.captureException(request.response, {
+				if (
+					request.response.isBoom &&
+					request.response.output.statusCode === 400
+				) {
+					const newOutPut = request.response.output;
+					if (
+						newOutPut.payload.message &&
+						newOutPut.payload.message.indexOf(' ' < 0)
+					) {
+						newOutPut.payload.messageError = getMessageError(
+							newOutPut.payload.message,
+						);
+					}
+					if (request.response.data && request.response.data.details) {
+						newOutPut.payload.details = request.response.data.details;
+					}
+					server.plugins['hapi-raven'].client.captureException(
+						request.response,
+						{
 							extra: {
 								query: request.query,
 								payload: request.payload,
@@ -86,66 +96,69 @@ module.exports = Glue.compose(
 							tags: {
 								statusCode: 400,
 							},
+						},
+					);
+				}
+				return request.response;
+			});
+			await server.events.on('response', async (request) => {
+				if (request.route && request.response && request.response.source) {
+					const { source } = request.response;
+					const { path, method } = request.route;
+					const { originPlatform } = source;
+					const companyId = source.companyId || source.comCompanyId;
+					const subsidiaryId = source.subsidiaryId || source.comSubsidiaryId;
+					if (path && method && companyId && subsidiaryId) {
+						const configSync = await request.server.methods.getConfigSync({
+							companyId,
+							subsidiaryId,
 						});
-					}
-					return request.response;
-				});
-				await server.events.on('response', async (request) => {
-					if (request.route && request.response && request.response.source) {
-						const { source } = request.response;
-						const { path, method } = request.route;
-						const { originPlatform } = source;
-						const companyId = source.companyId || source.comCompanyId;
-						const subsidiaryId = source.subsidiaryId || source.comSubsidiaryId;
-						if (path && method && companyId && subsidiaryId) {
-							const configSync = await request.server.methods.getConfigSync({
-								companyId,
-								subsidiaryId,
-							});
 
-							return validServicesSync({
-								path,
-								method,
-								rawPath: request.path,
-								originPlatform,
-								configSync,
-								source,
+						return validServicesSync({
+							path,
+							method,
+							rawPath: request.path,
+							originPlatform,
+							configSync,
+							source,
+						})
+							.then((processSync) => {
+								if (processSync.eurekaService) {
+									const summaryRequest = {
+										auth: {
+											credentials: request.auth.credentials,
+										},
+										response: {
+											source,
+										},
+									};
+									const { subsidiaryFilters, serviceSync, statusSync } =
+										processSync;
+									const externalApisInstance = new ExternalApis(
+										{
+											companyId,
+											serviceData: {
+												...serviceSync,
+												info: request.info,
+												subsidiaryFilters,
+												statusSync,
+											},
+											request: summaryRequest,
+										},
+										firebaseSync,
+									);
+									// eslint-disable-next-line no-await-in-loop
+									externalApisInstance.create({});
+								}
+								return request.response;
 							})
-								.then((processSync) => {
-									if (processSync.eurekaService) {
-										const summaryRequest = {
-											auth: {
-												credentials: request.auth.credentials,
-											},
-											response: {
-												source,
-											},
-										};
-										const { subsidiaryFilters, serviceSync, statusSync } = processSync;
-										const externalApisInstance = new ExternalApis(
-											{
-												companyId,
-												serviceData: {
-													...serviceSync,
-													info: request.info,
-													subsidiaryFilters,
-													statusSync,
-												},
-												request: summaryRequest,
-											},
-											firebaseSync,
-										);
-										// eslint-disable-next-line no-await-in-loop
-										externalApisInstance.create({});
-									}
-									return request.response;
-								})
-								.catch(error => console.log('Error process sync config ', error));
-						}
+							.catch((error) =>
+								console.log('Error process sync config ', error),
+							);
 					}
-					return request.response;
-				});
-			}
-		},
+				}
+				return request.response;
+			});
+		}
 	},
-);
+});
