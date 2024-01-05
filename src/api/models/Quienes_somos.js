@@ -1,10 +1,10 @@
 'use strict';
 
 const { Model } = require('objection');
-const baseModel = require('./base');
-const helper = require('./helper');
+const baseModel = require('../../../src/models/base');
+const helper = require('../../../src/models/helper');
 
-class Quienessomos {
+class quienessomos {
 	static get tableName() {
 		return 'quienessomos';
 	}
@@ -56,6 +56,10 @@ class Quienessomos {
 			'localespap',
 		]);
 	}
+
+	static listInfoquienessomos() {
+		return this.query();
+	}
 }
 
-module.exports = Quienessomos;
+module.exports = quienessomos;

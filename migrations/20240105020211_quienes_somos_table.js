@@ -1,6 +1,6 @@
 'use strict';
 
-const { defaultColumns } = require('../helperMigration');
+const { defaultColumns } = require('../src/models/helperMigration');
 
 exports.up = function (knex, Promise) {
 	return knex.schema.createTable('quienessomos', (table) => {
