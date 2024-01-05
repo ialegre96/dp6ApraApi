@@ -4,7 +4,6 @@ const { Model } = require('objection');
 const baseModel = require('./base');
 const helper = require('./helper');
 
-
 class Quienessomos {
 	static get tableName() {
 		return 'quienessomos';
@@ -13,6 +12,7 @@ class Quienessomos {
 	static get relationMappings() {}
 
 	static get jsonSchema() {
+		const defaultProperties = helper.defaultFields();
 		const schema = {
 			type: 'object',
 			requiered: ['telefono', 'email'],
@@ -25,6 +25,7 @@ class Quienessomos {
 				telefono: { type: ['string', 'null'] },
 				email: { type: ['string', 'null'] },
 				localespap: { type: ['string', 'null'] },
+				defaultProperties,
 			},
 		};
 		return schema;
