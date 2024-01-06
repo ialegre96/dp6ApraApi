@@ -56,6 +56,10 @@ class Afiliados {
 		const fullname = `${this.nombre} ${this.apellidoPaterno} ${this.apellidoMaterno}`;
 		return fullname;
 	}
+
+	static listAfiliados() {
+		return this.query();
+	}
 }
 
 module.exports = Afiliados;

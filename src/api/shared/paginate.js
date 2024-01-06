@@ -7,9 +7,7 @@ function success(data, query) {
 	if (query.page) {
 		totalRecords = data.total;
 		result = data.results;
-		lastPage = Math.ceil(
-			data.total / (query.limit || process.env.OFFSET_DEFAULT),
-		);
+		lastPage = Math.ceil(data.total / (query.limit || process.env.OFFSET_DEFAULT));
 	}
 	return this.response(result)
 		.header('x-quantity', totalRecords)

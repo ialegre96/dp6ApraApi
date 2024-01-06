@@ -2,11 +2,11 @@
 
 /* istanbul ignore next */
 const { isNullOrUndefined } = require('util');
-const Employee = require('./../models/ComEmployee');
-const Customer = require('./../models/Customer');
-const { customerReseller } = require('./../models/enums/code-type-rol-enum');
-const Token = require('./validate-token');
-const Redis = require('./redis/redis-connection');
+// const Employee = require('./../models/ComEmployee');
+// const Customer = require('./../models/Customer');
+// const { customerReseller } = require('./../models/enums/code-type-rol-enum');
+const Token = require('../validate-token');
+const Redis = require('../redis/redis-connection');
 
 async function authenticate(request, token) {
 	try {
@@ -86,7 +86,8 @@ async function authenticate(request, token) {
 				},
 				uid: null,
 				app_id: 2,
-				token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI5MzU4LCJpc3MiOiJodHRwczovL2FjbC5hcHBydW5uLm5ldC9hcGkvYXV0aGVudGljYXRlIiwiaWF0IjoxNjU0NzA5NTgwLCJleHAiOjE2NTk4OTM1ODAsIm5iZiI6MTY1NDcwOTU4MCwianRpIjoiOTNxakRtRU5iS1FnWjVQMyJ9.naivktq8KJdBgnCYR_sU7S54PH4njOtYXiPTdFjY2Ko',
+				token:
+					'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI5MzU4LCJpc3MiOiJodHRwczovL2FjbC5hcHBydW5uLm5ldC9hcGkvYXV0aGVudGljYXRlIiwiaWF0IjoxNjU0NzA5NTgwLCJleHAiOjE2NTk4OTM1ODAsIm5iZiI6MTY1NDcwOTU4MCwianRpIjoiOTNxakRtRU5iS1FnWjVQMyJ9.naivktq8KJdBgnCYR_sU7S54PH4njOtYXiPTdFjY2Ko',
 				statusHttp: '200',
 				info_device: {
 					name: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
@@ -120,7 +121,8 @@ async function authenticate(request, token) {
 					specialty: null,
 					level: null,
 					phone: null,
-					tokenDevice: 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjE6NjI2OTY2NzcyNTA0OmFuZHJvaWQ6NjQ2OGQ1OGVmOTQ2NmJkYmRlYmM2ZCIsImV4cCI6MTY1NDE5NjY3MiwiZmlkIjoiZHNrRERMaHdSRldRSHd1TE1vV28ySiIsInByb2plY3ROdW1iZXIiOjYyNjk2Njc3MjUwNH0.AB2LPV8wRQIhAL0lRn590JRZkCv8h7T4t',
+					tokenDevice:
+						'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjE6NjI2OTY2NzcyNTA0OmFuZHJvaWQ6NjQ2OGQ1OGVmOTQ2NmJkYmRlYmM2ZCIsImV4cCI6MTY1NDE5NjY3MiwiZmlkIjoiZHNrRERMaHdSRldRSHd1TE1vV28ySiIsInByb2plY3ROdW1iZXIiOjYyNjk2Njc3MjUwNH0.AB2LPV8wRQIhAL0lRn590JRZkCv8h7T4t',
 					configFilters: {
 						sales: {
 							warehouses: {
@@ -306,11 +308,7 @@ async function authenticate(request, token) {
 							flagUpdatePriceAllWarehouse: false,
 							flagWholesaleVariationGroup: false,
 							flagStockDiscountSaleTransfer: false,
-							typeProductsCreationPermission: [
-								1,
-								2,
-								6,
-							],
+							typeProductsCreationPermission: [1, 2, 6],
 							flagMultipleSalesConversionsQuote: false,
 						},
 						theme: {
@@ -379,14 +377,8 @@ async function authenticate(request, token) {
 									},
 									description: 'Crear comercio',
 									typeNotNames: {
-										TIE: [
-											'Persistencia de aplicación (SYNC)',
-											'Contabilidad',
-										],
-										TIP: [
-											'Link de pago',
-											'Boton de pago',
-										],
+										TIE: ['Persistencia de aplicación (SYNC)', 'Contabilidad'],
+										TIP: ['Link de pago', 'Boton de pago'],
 									},
 								},
 								{
@@ -416,12 +408,8 @@ async function authenticate(request, token) {
 									},
 									description: 'Actualizar promoción\t',
 									typeNotNames: {
-										TIN: [
-											'Mensajeria',
-										],
-										TIP: [
-											'Link de pago',
-										],
+										TIN: ['Mensajeria'],
+										TIP: ['Link de pago'],
 									},
 								},
 							],
@@ -773,7 +761,8 @@ async function authenticate(request, token) {
 							name: 'Peru',
 							countryCode: 'PER',
 							taxName: 'IGV',
-							urlImage: 'https://quipu-admin.s3.amazonaws.com/flags/flag-peru.jpg',
+							urlImage:
+								'https://quipu-admin.s3.amazonaws.com/flags/flag-peru.jpg',
 							taxSize: null,
 							configSupplier: null,
 							configTaxes: {
@@ -944,18 +933,14 @@ async function authenticate(request, token) {
 						},
 						commerceSubsidiaries: [
 							{
-								warehousesRelated: [
-									4093,
-								],
+								warehousesRelated: [4093],
 								subsidiaryId: 2254,
 								subsidiaryAclCode: 'THEEND01_20147852360',
 								ruc: '201478523602',
 								rucName: '201478523602 - undefined',
 							},
 							{
-								warehousesRelated: [
-									4523,
-								],
+								warehousesRelated: [4523],
 								subsidiaryId: 2521,
 								subsidiaryAclCode: null,
 								ruc: '45678912345',
@@ -1008,7 +993,8 @@ async function authenticate(request, token) {
 						},
 						flagAccountingEngine: 0,
 						flagAccountingAutomatic: 0,
-						urlLogo: 'https://quipu-static.s3.amazonaws.com/THEEND01_image/THEEND01_20147852360/image7.png',
+						urlLogo:
+							'https://quipu-static.s3.amazonaws.com/THEEND01_image/THEEND01_20147852360/image7.png',
 						companyId: 373,
 						subsidiaryId: null,
 						distributorCustomerId: null,
@@ -1214,7 +1200,8 @@ async function authenticate(request, token) {
 				roleCode: 'ADMIN',
 				cms_companies_id: 373,
 				com_item_id: 4,
-				authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI5MzU4LCJpc3MiOiJodHRwczovL2FjbC5hcHBydW5uLm5ldC9hcGkvYXV0aGVudGljYXRlIiwiaWF0IjoxNjU0NzA5NTgwLCJleHAiOjE2NTk4OTM1ODAsIm5iZiI6MTY1NDcwOTU4MCwianRpIjoiOTNxakRtRU5iS1FnWjVQMyJ9.naivktq8KJdBgnCYR_sU7S54PH4njOtYXiPTdFjY2Ko',
+				authorization:
+					'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI5MzU4LCJpc3MiOiJodHRwczovL2FjbC5hcHBydW5uLm5ldC9hcGkvYXV0aGVudGljYXRlIiwiaWF0IjoxNjU0NzA5NTgwLCJleHAiOjE2NTk4OTM1ODAsIm5iZiI6MTY1NDcwOTU4MCwianRpIjoiOTNxakRtRU5iS1FnWjVQMyJ9.naivktq8KJdBgnCYR_sU7S54PH4njOtYXiPTdFjY2Ko',
 			};
 			let credentials = {};
 			if (data) {
@@ -1230,15 +1217,22 @@ async function authenticate(request, token) {
 						credentials.role.typeRole.code === customerReseller
 					) {
 						const companyCode = credentials.company.code_company;
-						const customer = await Customer.getByAclCode(credentials.code_user, companyCode);
+						const customer = await Customer.getByAclCode(
+							credentials.code_user,
+							companyCode,
+						);
 						if (customer) {
-							dataEmployee = await Employee.getByFlagAdmin(customer.comCompaniesId);
+							dataEmployee = await Employee.getByFlagAdmin(
+								customer.comCompaniesId,
+							);
 							dataEmployee.customer = customer;
 							credentials.commerce = customer.commerce;
 							dataEmployee.commerce = customer.commerce;
 						}
 					} else {
-						dataEmployee = await Employee.getByAclUserCode(credentials.code_user);
+						dataEmployee = await Employee.getByAclUserCode(
+							credentials.code_user,
+						);
 					}
 
 					if (!isNullOrUndefined(dataEmployee)) {
@@ -1250,7 +1244,9 @@ async function authenticate(request, token) {
 						credentials.aclUserId = credentials.id;
 						credentials.employee = dataEmployee;
 						const configSubsidiary =
-							(dataEmployee.configFilters && dataEmployee.configFilters.subsidiaries) || {};
+							(dataEmployee.configFilters &&
+								dataEmployee.configFilters.subsidiaries) ||
+							{};
 						if (dataEmployee.configFilters) {
 							dataEmployee.configFilters.cash = { ...configSubsidiary.cash };
 							delete configSubsidiary.cash;
@@ -1258,9 +1254,13 @@ async function authenticate(request, token) {
 						}
 						credentials.filters = dataEmployee.configFilters || {};
 						credentials.roleConfig =
-							credentials.role && credentials.role.typeRole && credentials.role.typeRole.settings;
+							credentials.role &&
+							credentials.role.typeRole &&
+							credentials.role.typeRole.settings;
 						credentials.roleCode =
-							credentials.role && credentials.role.typeRole && credentials.role.typeRole.code;
+							credentials.role &&
+							credentials.role.typeRole &&
+							credentials.role.typeRole.code;
 						if (dataEmployee.dataSellers) {
 							credentials.dataSellers = dataEmployee.dataSellers;
 						}

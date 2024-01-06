@@ -4,7 +4,6 @@ const { Model } = require('objection');
 const baseModel = require('./base');
 const helper = require('./helper');
 
-
 class Quienessomos {
 	static get tableName() {
 		return 'quienessomos';

@@ -3,18 +3,18 @@
 const Glue = require('glue');
 const AuthBearer = require('hapi-auth-bearer-token');
 const dbConfig = require('./../config/objection');
-const validate = require('./authenticate-token');
+const validate = require('./shared/authenticate-token');
 const validateStore = require('./authenticate-store');
 const validateCompany = require('./validate-company');
 const plugins = require('./plugins-register');
 const cacheConfig = require('./cache');
 const cookie = require('./cookieAuthenticate');
 const { isDevOrProd } = require('../shared/helper');
-const validServicesSync = require('../external-apis/apis-strategies/processSync/PathServicesSync');
-const ExternalApis = require('../external-apis/ExternalApisStrategy');
-const {
-	firebaseSync,
-} = require('../external-apis/apis-strategies/apis-strategies-codes');
+// const validServicesSync = require('../external-apis/apis-strategies/processSync/PathServicesSync');
+// const ExternalApis = require('../external-apis/ExternalApisStrategy');
+// const {
+// 	firebaseSync,
+// } = require('../external-apis/apis-strategies/apis-strategies-codes');
 const { getMessageError } = require('./shared/httpHelper');
 
 dbConfig.initConnection();
@@ -114,47 +114,47 @@ module.exports = Glue.compose(manifest, {
 							subsidiaryId,
 						});
 
-						return validServicesSync({
-							path,
-							method,
-							rawPath: request.path,
-							originPlatform,
-							configSync,
-							source,
-						})
-							.then((processSync) => {
-								if (processSync.eurekaService) {
-									const summaryRequest = {
-										auth: {
-											credentials: request.auth.credentials,
-										},
-										response: {
-											source,
-										},
-									};
-									const { subsidiaryFilters, serviceSync, statusSync } =
-										processSync;
-									const externalApisInstance = new ExternalApis(
-										{
-											companyId,
-											serviceData: {
-												...serviceSync,
-												info: request.info,
-												subsidiaryFilters,
-												statusSync,
-											},
-											request: summaryRequest,
-										},
-										firebaseSync,
-									);
-									// eslint-disable-next-line no-await-in-loop
-									externalApisInstance.create({});
-								}
-								return request.response;
-							})
-							.catch((error) =>
-								console.log('Error process sync config ', error),
-							);
+						// return validServicesSync({
+						// 	path,
+						// 	method,
+						// 	rawPath: request.path,
+						// 	originPlatform,
+						// 	configSync,
+						// 	source,
+						// })
+						// 	.then((processSync) => {
+						// 		if (processSync.eurekaService) {
+						// 			const summaryRequest = {
+						// 				auth: {
+						// 					credentials: request.auth.credentials,
+						// 				},
+						// 				response: {
+						// 					source,
+						// 				},
+						// 			};
+						// 			const { subsidiaryFilters, serviceSync, statusSync } =
+						// 				processSync;
+						// 			const externalApisInstance = new ExternalApis(
+						// 				{
+						// 					companyId,
+						// 					serviceData: {
+						// 						...serviceSync,
+						// 						info: request.info,
+						// 						subsidiaryFilters,
+						// 						statusSync,
+						// 					},
+						// 					request: summaryRequest,
+						// 				},
+						// 				firebaseSync,
+						// 			);
+						// 			// eslint-disable-next-line no-await-in-loop
+						// 			externalApisInstance.create({});
+						// 		}
+						// 		return request.response;
+						// 	})
+						// 	.catch((error) =>
+						// 		console.log('Error process sync config ', error),
+						// 	);
 					}
 				}
 				return request.response;

@@ -1,7 +1,7 @@
 'use strict';
 
 const { isNullOrUndefined } = require('util');
-const Company = require('./../models/Company');
+// const Company = require('./../models/Company');
 const { defaultAxios } = require('./shared/pre');
 const { isDevOrProd } = require('./../shared/helper');
 
