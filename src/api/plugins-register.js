@@ -2,6 +2,7 @@
 
 const raven = require('hapi-raven');
 const statusPlugin = require('hapijs-status-monitor');
+<<<<<<< HEAD
 const { isDevOrProd } = require('../shared/helper');
 const pagiJapi = require('./shared/paginate');
 const hapiAxios = require('./shared/axios');
@@ -28,3 +29,5 @@ if (isDevOrProd()) {
 }
 
 module.exports = plugins;
+=======
+>>>>>>> a7ed40866ffe458d006226797bb4f2704881a2dc
